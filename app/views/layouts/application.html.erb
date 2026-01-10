@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Shape4m</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-zinc-950 text-zinc-50">
+    <div class="mx-auto max-w-md min-h-screen flex flex-col">
+      <!-- Top bar -->
+      <header class="sticky top-0 z-10 bg-zinc-950/80 backdrop-blur border-b border-white/10">
+        <div class="px-4 py-3 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-zinc-300">Projeto</p>
+            <h1 class="text-lg font-semibold">Shape 4 Meses</h1>
+          </div>
+          <div class="text-right">
+            <p class="text-xs text-zinc-400"><%= Date.current.strftime("%d/%m/%Y") %></p>
+          </div>
+        </div>
+      </header>
+
+      <!-- Flash -->
+      <div class="px-4 pt-3">
+        <% if notice.present? %>
+          <div class="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">
+            <%= notice %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Page -->
+      <main class="flex-1 px-4 py-4 pb-24">
+        <%= yield %>
+      </main>
+
+      <!-- Bottom nav -->
+      <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur border-t border-white/10">
+        <div class="mx-auto max-w-md px-3 py-2 grid grid-cols-4 gap-2 text-xs">
+          <%= link_to "Home", root_path,
+              class: "rounded-xl px-3 py-2 text-center #{current_page?(root_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
+          <%= link_to "Hoje", today_path,
+              class: "rounded-xl px-3 py-2 text-center #{current_page?(today_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
+          <%= link_to "Treino", workout_path,
+              class: "rounded-xl px-3 py-2 text-center #{current_page?(workout_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
+          <%= link_to "Plano", plan_path,
+              class: "rounded-xl px-3 py-2 text-center #{current_page?(plan_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
+        </div>
+      </nav>
+    </div>
+  </body>
+</html>
+
+

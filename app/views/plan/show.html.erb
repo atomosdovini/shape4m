@@ -1,0 +1,68 @@
+<div class="space-y-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300"><%= @title %></p>
+    <p class="text-lg font-semibold mt-1">Metas diárias</p>
+
+    <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
+      <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+        <p class="text-zinc-400 text-xs">Calorias</p>
+        <p class="font-semibold"><%= @targets[:calories] %> kcal</p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+        <p class="text-zinc-400 text-xs">Passos</p>
+        <p class="font-semibold"><%= @targets[:steps] %></p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+        <p class="text-zinc-400 text-xs">Macros</p>
+        <p class="font-semibold"><%= @targets[:protein_g] %>P • <%= @targets[:fat_g] %>G • <%= @targets[:carbs_g] %>C</p>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+        <p class="text-zinc-400 text-xs">Água / Sono</p>
+        <p class="font-semibold"><%= @targets[:water_l] %>L • <%= @targets[:sleep_h] %>h</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Meta do projeto</p>
+    <p class="text-lg font-semibold">Peso alvo: <%= @goals[:weight_target] %></p>
+    <p class="text-sm text-zinc-400 mt-1">Perda esperada: <%= @goals[:loss_12w] %> (12s) • <%= @goals[:loss_16w] %> (16s)</p>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Regras do jogo</p>
+    <ul class="mt-3 space-y-2">
+      <% @rules.each do |r| %>
+        <li class="rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm text-zinc-200">✅ <%= r %></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Estrutura de refeições</p>
+    <div class="mt-3 space-y-3">
+      <% @meals.each do |m| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+          <p class="font-semibold"><%= m[:name] %></p>
+          <ul class="mt-2 text-sm text-zinc-300 list-disc pl-5 space-y-1">
+            <% m[:options].each do |opt| %>
+              <li><%= opt %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Lista de alimentos</p>
+    <div class="mt-3 grid grid-cols-1 gap-3">
+      <% @foods.each do |k, items| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+          <p class="font-semibold capitalize"><%= k.to_s.gsub("_", " ") %></p>
+          <p class="text-sm text-zinc-300 mt-2"><%= items.join(" • ") %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

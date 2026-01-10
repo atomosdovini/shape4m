@@ -1,0 +1,37 @@
+<div class="space-y-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Treino do dia</p>
+
+    <% if @workout_name.present? %>
+      <p class="text-lg font-semibold"><%= @workout_name %></p>
+      <p class="text-xs text-zinc-400 mt-1">Descanso: 60–120s • Termina cada série com 1–3 reps na reserva.</p>
+
+      <div class="mt-4 space-y-2">
+        <% @workout.each_with_index do |(name, sets), idx| %>
+          <div class="rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2">
+            <div class="flex items-center justify-between">
+              <span class="text-sm font-medium"><%= idx + 1 %>. <%= name %></span>
+              <span class="text-xs text-zinc-300"><%= sets %></span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="mt-4">
+        <%= link_to "Marcar check-in (Hoje)", today_path, class: "block rounded-xl bg-white text-zinc-950 font-semibold px-3 py-3 text-center" %>
+      </div>
+    <% else %>
+      <p class="text-lg font-semibold">Descanso / Passos</p>
+      <p class="text-sm text-zinc-400 mt-2">Sábado: caminhada longa • Domingo: descanso + passos leves.</p>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Progressão</p>
+    <ul class="mt-2 text-sm text-zinc-300 list-disc pl-5 space-y-1">
+      <li>Quando bater o topo das reps em todas séries → aumente dificuldade.</li>
+      <li>Opções: variação mais difícil, mais reps, mais tempo, mochila com peso.</li>
+      <li>Consistência &gt; perfeição.</li>
+    </ul>
+  </div>
+</div>
