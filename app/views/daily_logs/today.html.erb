@@ -1,4 +1,21 @@
-<div class="space-y-4">
+<% tab = params[:tab].presence || "checkin" %>
+
+<div class="mb-4">
+  <div class="grid grid-cols-2 gap-2 rounded-2xl border border-white/10 bg-white/5 p-2">
+    <%= link_to "✅ Check-in", today_path(tab: "checkin"),
+          class: "rounded-xl px-3 py-2 text-center text-sm #{tab == "checkin" ? "bg-white text-zinc-950 font-semibold" : "bg-white/5 text-zinc-200"}" %>
+
+    <%= link_to "🕒 Dia (Steps)", today_path(tab: "day"),
+          class: "rounded-xl px-3 py-2 text-center text-sm #{tab == "day" ? "bg-white text-zinc-950 font-semibold" : "bg-white/5 text-zinc-200"}" %>
+  </div>
+</div>
+
+
+<% if tab == "checkin" %>
+  <!-- AQUI fica seu conteúdo atual do check-in (o form + treino do dia etc) -->
+
+
+<div class="space-y-4 mt-4">
   <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
     <p class="text-sm text-zinc-300">Check-in de hoje</p>
     <p class="text-lg font-semibold"><%= @date.strftime("%d/%m/%Y") %></p>
@@ -70,3 +87,97 @@
     <% end %>
   </div>
 </div>
+
+<% else %>
+<div class="space-y-3 mt-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Dia (Steps)</p>
+    <p class="text-lg font-semibold">Siga a rotina e marque o que foi feito</p>
+
+    <% if @next_step %>
+      <p class="text-sm text-zinc-400 mt-1">
+        Próximo passo: <span class="text-white font-semibold">#<%= @next_step.position %></span>
+      </p>
+    <% else %>
+      <p class="text-sm text-emerald-300 mt-1 font-semibold">Dia concluído ✅</p>
+    <% end %>
+  </div>
+<% if @routine_logs.present? %>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-2">
+    <div class="divide-y divide-white/10">
+      <% @routine_logs.each do |rl| %>
+        <% tmpl = Plan.routine_template_for(@date).find { |x| x[:key] == rl.key } %>
+        <% title  = tmpl ? tmpl[:title] : rl.key %>
+        <% detail = tmpl ? tmpl[:detail] : "" %>
+        <% time   = tmpl ? tmpl[:time] : "" %>
+
+        <% is_next = (@next_step && rl.id == @next_step.id) %>
+
+        <div class="px-3 py-3 <%= is_next ? "bg-white/10 rounded-xl" : "" %>">
+          <div class="flex items-start gap-3">
+            <%= button_to toggle_routine_path(rl),
+                method: :patch,
+                data: { turbo: false },
+                class: "mt-0.5 shrink-0 inline-flex h-11 w-11 items-center justify-center rounded-xl border #{rl.done ? 'bg-emerald-500/15 border-emerald-400/30' : 'bg-zinc-950/40 border-white/10'}" do %>
+                <span class="text-base leading-none <%= rl.done ? 'text-emerald-200' : 'text-zinc-400' %>">
+                    <%= rl.done ? "✓" : "" %>
+                </span>
+            <% end %>
+
+
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <span class="text-xs rounded-full px-2 py-1 border border-white/10 bg-zinc-950/40 text-zinc-300">
+                  <%= time %>
+                </span>
+
+                <% if is_next %>
+                  <span class="text-xs text-emerald-300 font-semibold">AGORA</span>
+                <% end %>
+
+                <% if rl.done && rl.done_at.present? %>
+                  <span class="text-xs text-zinc-500">feito <%= rl.done_at.strftime("%H:%M") %></span>
+                <% end %>
+              </div>
+
+              <p class="mt-2 text-sm font-semibold <%= rl.done ? "text-zinc-400 line-through" : "text-white" %>">
+                <%= title %>
+              </p>
+              <p class="text-sm <%= rl.done ? "text-zinc-500" : "text-zinc-300" %> mt-1">
+                <%= detail %>
+              </p>
+            </div>
+
+            <div class="shrink-0 text-xs text-zinc-500">#<%= rl.position %></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+<% end %>
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div class="grid grid-cols-2 gap-2">
+      <%= link_to "Check-in", today_path(tab: "checkin"), class: "rounded-xl bg-white text-zinc-950 font-semibold px-3 py-3 text-center" %>
+      <%= link_to "Treino", workout_path, class: "rounded-xl bg-white/10 text-white px-3 py-3 text-center" %>
+    </div>
+  </div>
+</div>
+<% end %>
+<style>
+button.mt-0\.5.inline-flex.h-11.w-11.items-center.justify-center.rounded-xl.border.bg-zinc-950\/40.border-white\/10 {
+    width: 25px;
+    height: 25px;
+}
+
+
+button.mt-0\.5.shrink-0.inline-flex.h-11.w-11.items-center.justify-center.rounded-xl.border.bg-emerald-500\/15.border-emerald-400\/30 {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    border-color: green;
+}
+</style>

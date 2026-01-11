@@ -1,4 +1,77 @@
-<div>
-  <h1 class="font-bold text-4xl">Dashboard#show</h1>
-  <p>Find me in app/views/dashboard/show.html.erb</p>
+<% score = @today_log&.completed_score.to_i %>
+<% pct = (score / 6.0 * 100).round %>
+
+<div class="space-y-4">
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-sm text-zinc-300">Metas diárias</p>
+        <p class="text-lg font-semibold"><%= @targets[:calories] %> kcal • <%= @targets[:protein_g] %>P • <%= @targets[:fat_g] %>G • <%= @targets[:carbs_g] %>C</p>
+        <p class="text-sm text-zinc-300 mt-1">Passos: <span class="text-white font-medium"><%= @targets[:steps] %></span> • Água: <%= @targets[:water_l] %>L • Sono: <%= @targets[:sleep_h] %>h</p>
+      </div>
+      <div class="text-right">
+        <p class="text-xs text-zinc-400">Hoje</p>
+        <p class="text-lg font-semibold"><%= pct %>%</p>
+        <p class="text-xs text-zinc-400"><%= score %>/6</p>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <div class="h-2 rounded-full bg-white/10 overflow-hidden">
+        <div class="h-full bg-white/70" style="width: <%= pct %>%"></div>
+      </div>
+      <div class="mt-2 flex items-center justify-between text-xs text-zinc-400">
+        <span>Streak (≥4/6): <span class="text-white"><%= @streak %></span></span>
+        <span><%= Date.current.strftime("%d/%m/%Y") %></span>
+      </div>
+    </div>
+
+    <div class="mt-4 grid grid-cols-2 gap-2">
+      <%= link_to "check-in (Hoje)", today_path, class: "rounded-xl bg-white text-zinc-950 font-medium px-3 py-2 text-center" %>
+      <%= link_to "Ver treino", workout_path, class: "rounded-xl bg-white/10 text-white px-3 py-2 text-center" %>
+    </div>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Treino de hoje</p>
+    <% if @workout_name.present? %>
+      <p class="text-lg font-semibold"><%= @workout_name %></p>
+      <p class="text-sm text-zinc-400 mt-1">O checklist fica na tela “Hoje”.</p>
+    <% else %>
+      <p class="text-lg font-semibold">Descanso / Passos</p>
+      <p class="text-sm text-zinc-400 mt-1">Sábado: caminhada longa • Domingo: descanso + passos leves.</p>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div class="flex items-center justify-between">
+      <p class="text-lg font-semibold">Histórico</p>
+      <%= link_to "Ver mais", daily_logs_path, class: "text-sm text-zinc-300 underline underline-offset-2" %>
+    </div>
+
+    <div class="mt-3 space-y-2">
+      <% @logs.each do |log| %>
+        <%= link_to day_path(log.date.to_s),
+              class: "block rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-3" do %>
+          <div class="flex items-center justify-between">
+            <p class="font-semibold"><%= log.date.strftime("%d/%m/%Y") %></p>
+            <span class="text-xs rounded-full px-2 py-1 border border-white/10 bg-white/5">
+              <%= log.completed_score %>/6
+            </span>
+          </div>
+
+          <div class="mt-2 grid grid-cols-2 gap-2 text-sm text-zinc-300">
+            <div class="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
+              <p class="text-xs text-zinc-400">Peso</p>
+              <p class="font-semibold"><%= log.weight_kg.present? ? "#{log.weight_kg} kg" : "—" %></p>
+            </div>
+            <div class="rounded-lg border border-white/10 bg-white/5 px-2 py-2">
+              <p class="text-xs text-zinc-400">Cintura</p>
+              <p class="font-semibold"><%= log.waist_cm.present? ? "#{log.waist_cm} cm" : "—" %></p>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
 </div>

@@ -9,7 +9,11 @@ Rails.application.routes.draw do
   patch "/today",  to: "daily_logs#update_today"
 
   get "/plan",     to: "plan#show"
-  get "/workout",  to: "workouts#show"
+  patch "/dashboard", to: "dashboard#update", as: :dashboard_update
+  get "/day/:date", to: "daily_logs#show_by_date", as: :day
+  get "/workout", to: "workouts#show", as: :workout
+  get "/workout/:date", to: "workouts#show", as: :workout_on
+  patch "/today/routine/:id/toggle", to: "routine_logs#toggle", as: :toggle_routine
 
   resources :daily_logs, only: [:index]
 end

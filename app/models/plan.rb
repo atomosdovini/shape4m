@@ -129,4 +129,109 @@ class Plan
     return nil if wday == 0 || wday == 6
     WEEK_TEMPLATE[wday - 1]
   end
+
+    # Rotina diária (hard-coded) — você pode ajustar depois
+  DAILY_ROUTINE = [
+    { time: "07:00", title: "Acordar + água", detail: "500ml água + 5 min mobilidade" },
+    { time: "07:30", title: "Café (Refeição 1)", detail: "Opção: 3 ovos + banana OU iogurte grego + aveia + fruta" },
+    { time: "08:00", title: "Passos (Bloco 1)", detail: "2.000–3.000 passos (10–20 min)" },
+    { time: "10:30", title: "Água", detail: "Mais 400–600ml água" },
+    { time: "12:30", title: "Almoço (Refeição 2)", detail: "200g proteína + arroz/batata + salada grande" },
+    { time: "13:15", title: "Passos (Bloco 2)", detail: "3.000–4.000 passos (20–30 min)" },
+    { time: "16:30", title: "Lanche (Refeição 3)", detail: "Whey + banana OU ovos + fruta OU iogurte grego + fruta" },
+    { time: "17:00", title: "Treino (Força)", detail: "40–60 min — quase falha (1–3 reps na reserva)" },
+    { time: "18:15", title: "Passos (Bloco 3)", detail: "3.000–4.000 passos (20–30 min)" },
+    { time: "20:00", title: "Jantar (Refeição 4)", detail: "200g proteína + legumes/salada; carbo pequeno se necessário" },
+    { time: "21:30", title: "Fechar passos + água", detail: "Bater 12k + 300–500ml água" },
+    { time: "23:00", title: "Sono", detail: "Meta: 7–8h" }
+  ].freeze
+
+  def self.routine_for(_date)
+    DAILY_ROUTINE
+  end
+
+  # Retorna índice do próximo item baseado no horário atual
+  def self.next_routine_index(now_time)
+    routine = DAILY_ROUTINE
+    now_minutes = now_time.hour * 60 + now_time.min
+
+    routine_minutes = routine.map do |item|
+      h, m = item[:time].split(":").map(&:to_i)
+      h * 60 + m
+    end
+
+    idx = routine_minutes.index { |mins| mins >= now_minutes }
+    idx || (routine.length - 1)
+  end
+
+
+
+  def self.training_day?(date)
+    # Seg–Sex = treino; Sáb/Dom = descanso/steps
+    !(date.saturday? || date.sunday?)
+  end
+
+  # blocos que batem 12k (pode ajustar depois)
+  def self.steps_blocks
+    [
+      { time: "08:00", steps: 3000, label: "Passos (Bloco 1)" },
+      { time: "13:15", steps: 4000, label: "Passos (Bloco 2)" },
+      { time: "18:15", steps: 4000, label: "Passos (Bloco 3)" },
+      { time: "21:30", steps: 1000, label: "Fechar passos" }
+    ]
+  end
+
+  # Rotina “template” do dia (retorna array de steps com key única)
+  def self.routine_template_for(date)
+    routine = []
+
+    routine << { key: "wake_water", time: "07:00", title: "Acordar + água", detail: "500ml água + 5 min mobilidade" }
+    routine << { key: "meal_1", time: "07:30", title: "Café (Refeição 1)", detail: "3 ovos + banana OU iogurte grego + aveia + fruta" }
+
+    steps_blocks.each_with_index do |b, i|
+      routine << {
+        key: "steps_#{i+1}",
+        time: b[:time],
+        title: b[:label],
+        detail: "#{b[:steps]} passos (esteira/caminhada)"
+      }
+    end
+
+    routine << { key: "water_mid", time: "10:30", title: "Água", detail: "Mais 400–600ml água" }
+    routine << { key: "meal_2", time: "12:30", title: "Almoço (Refeição 2)", detail: "200g proteína + arroz/batata + salada grande" }
+    routine << { key: "meal_3", time: "16:30", title: "Lanche (Refeição 3)", detail: "Whey + banana OU ovos + fruta OU iogurte grego + fruta" }
+
+    if training_day?(date)
+      workout_name = workout_for(date) # seu método existente
+      routine << { key: "workout", time: "17:00", title: "Treino (Força)", detail: workout_name || "Treino do dia" }
+    else
+      routine << { key: "active_rest", time: "17:00", title: "Atividade leve", detail: "Caminhada longa / mobilidade (20–40 min)" }
+    end
+
+    routine << { key: "meal_4", time: "20:00", title: "Jantar (Refeição 4)", detail: "200g proteína + legumes/salada; carbo pequeno se necessário" }
+    routine << { key: "sleep", time: "23:00", title: "Sono", detail: "Meta: 7–8h" }
+
+    # Ordenar por horário
+    routine.sort_by do |item|
+      h, m = item[:time].split(":").map(&:to_i)
+      h * 60 + m
+    end
+  end
+
+  # Garante que existe RoutineLog para o dia (idempotente)
+  def self.ensure_routine_logs_for!(date)
+    template = routine_template_for(date)
+
+    template.each_with_index do |item, idx|
+      RoutineLog.find_or_create_by!(date: date, key: item[:key]) do |rl|
+        rl.position = idx + 1
+        rl.done = false
+      end
+    end
+
+    # Atualiza posição caso template mude com o tempo
+    template.each_with_index do |item, idx|
+      RoutineLog.where(date: date, key: item[:key]).update_all(position: idx + 1)
+    end
+  end
 end

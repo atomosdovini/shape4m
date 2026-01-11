@@ -86,11 +86,9 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-  # Permite hosts da Railway (domínio gerado) e localhost
-  config.hosts << /.*\.railway\.app/
-  config.hosts << /.*\.up\.railway\.app/
-  config.hosts << "localhost"
-  config.hosts << "127.0.0.1"
+  config.hosts << "bcb9172ab5dd.ngrok-free.app"
+  
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: 2026-01-10
+  key: MyString
+  done: false
+  done_at: 2026-01-10 18:51:02
+  position: 1
+
+two:
+  date: 2026-01-10
+  key: MyString
+  done: false
+  done_at: 2026-01-10 18:51:02
+  position: 1
