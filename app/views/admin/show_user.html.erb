@@ -1,0 +1,104 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-2xl font-semibold">Plano para: <%= @user.email %></h2>
+      <p class="text-sm text-zinc-400 mt-1">
+        Altura: <%= @user.height_cm %>cm • Peso: <%= @user.start_weight_kg %>kg • 
+        Objetivo: <%= @user.objective %> • Treinos: <%= @user.training_days_per_week %>/semana
+      </p>
+    </div>
+    <%= link_to "← Voltar", admin_index_path, class: "text-sm text-zinc-400 hover:text-zinc-200" %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">1. Gerar Prompt para ChatGPT</h3>
+    <p class="text-sm text-zinc-400 mb-4">
+      Copie o prompt abaixo e cole no ChatGPT para gerar o JSON personalizado.
+    </p>
+    
+    <%= link_to "Ver Prompt", admin_generate_prompt_path(@user), class: "rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 text-sm mb-4" %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">2. Colar JSON Completo</h3>
+    <p class="text-sm text-zinc-400 mb-4">
+      Cole aqui o JSON completo gerado pelo ChatGPT e clique em "Salvar Plano Completo".
+    </p>
+    
+    <%= form_with url: admin_update_custom_plan_path(@user), method: :patch, class: "space-y-4" do |f| %>
+      <%= hidden_field_tag :update_type, "full" %>
+      <div>
+        <%= text_area_tag :custom_json, @config.is_customized? ? JSON.pretty_generate(@config.data) : "", 
+            rows: 20, 
+            class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-mono focus:outline-none focus:border-white/20",
+            placeholder: 'Cole o JSON completo aqui...' %>
+      </div>
+      
+      <div class="flex gap-2">
+        <%= submit_tag "Salvar Plano Completo", class: "rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 text-sm", style: "cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">3. Editar Refeições e Alimentos (Meals + Foods)</h3>
+    <p class="text-sm text-zinc-400 mb-4">
+      Cole aqui apenas a parte do JSON com "meals" e "foods". Exemplo: <code class="text-xs bg-zinc-900 px-1 py-0.5 rounded">{"meals": [...], "foods": {...}}</code>
+    </p>
+    
+    <%= form_with url: admin_update_custom_plan_path(@user), method: :patch, class: "space-y-4" do |f| %>
+      <%= hidden_field_tag :update_type, "meals_foods" %>
+      <div>
+        <% meals_foods_data = {} %>
+        <% if @config.is_customized? && @config.data.present? %>
+          <% meals_foods_data = { "meals" => @config.data["meals"], "foods" => @config.data["foods"] } %>
+        <% end %>
+        <%= text_area_tag :meals_foods_json, meals_foods_data.present? && meals_foods_data["meals"].present? ? JSON.pretty_generate(meals_foods_data) : "", 
+            rows: 15, 
+            class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-mono focus:outline-none focus:border-white/20",
+            placeholder: '{"meals": [...], "foods": {...}}' %>
+      </div>
+      
+      <div class="flex gap-2">
+        <%= submit_tag "Salvar Refeições e Alimentos", class: "rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 text-sm", style: "cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">4. Editar Treinos (Workouts)</h3>
+    <p class="text-sm text-zinc-400 mb-4">
+      Cole aqui apenas a parte do JSON com "workouts". Exemplo: <code class="text-xs bg-zinc-900 px-1 py-0.5 rounded">{"workouts": {...}}</code>
+    </p>
+    
+    <%= form_with url: admin_update_custom_plan_path(@user), method: :patch, class: "space-y-4" do |f| %>
+      <%= hidden_field_tag :update_type, "workouts" %>
+      <div>
+        <% workouts_data = {} %>
+        <% if @config.is_customized? && @config.data.present? %>
+          <% workouts_data = { "workouts" => @config.data["workouts"] } %>
+        <% end %>
+        <%= text_area_tag :workouts_json, workouts_data.present? && workouts_data["workouts"].present? ? JSON.pretty_generate(workouts_data) : "", 
+            rows: 15, 
+            class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm font-mono focus:outline-none focus:border-white/20",
+            placeholder: '{"workouts": {...}}' %>
+      </div>
+      
+      <div class="flex gap-2">
+        <%= submit_tag "Salvar Treinos", class: "rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-semibold px-4 py-2 text-sm", style: "cursor: pointer;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Status do Plano</h3>
+    <p class="text-sm">
+      <% if @config.is_customized? %>
+        <span class="text-emerald-400">✅ Plano personalizado ativo</span>
+      <% else %>
+        <span class="text-yellow-400">⏳ Aguardando plano personalizado (usando padrão temporariamente)</span>
+      <% end %>
+    </p>
+  </div>
+</div>
+

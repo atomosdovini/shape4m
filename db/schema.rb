@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_11_024328) do
+ActiveRecord::Schema[7.1].define(version: 2026_01_11_183826) do
   create_table "daily_logs", force: :cascade do |t|
     t.date "date"
     t.decimal "weight_kg"
@@ -33,6 +33,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_11_024328) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.boolean "is_customized", default: false
     t.index ["user_id"], name: "index_plan_configurations_on_user_id"
   end
 
@@ -56,6 +57,12 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_11_024328) do
     t.datetime "remember_created_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "height_cm"
+    t.decimal "start_weight_kg", precision: 5, scale: 2
+    t.string "objective"
+    t.integer "training_days_per_week"
+    t.boolean "questionnaire_completed", default: false
+    t.boolean "admin", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

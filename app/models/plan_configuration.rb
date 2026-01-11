@@ -4,7 +4,12 @@ class PlanConfiguration < ApplicationRecord
   
   # Retorna a configuração atual do usuário (sempre uma)
   def self.current(user)
-    user.plan_configuration || user.create_plan_configuration!(data: default_data)
+    user.plan_configuration || user.create_plan_configuration!(data: default_data, is_customized: false)
+  end
+  
+  # Verifica se o plano está customizado
+  def is_customized?
+    is_customized == true
   end
   
   # Acessa dados como hash

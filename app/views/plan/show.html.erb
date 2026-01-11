@@ -35,15 +35,6 @@
   </div>
 
   <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-    <p class="text-sm text-zinc-300">Regras do jogo</p>
-    <ul class="mt-3 space-y-2">
-      <% @rules.each do |r| %>
-        <li class="rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm text-zinc-200">✅ <%= r %></li>
-      <% end %>
-    </ul>
-  </div>
-
-  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
     <p class="text-sm text-zinc-300">Estrutura de refeições</p>
     <div class="mt-3 space-y-3">
       <% @meals.each do |m| %>
@@ -70,4 +61,15 @@
       <% end %>
     </div>
   </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <p class="text-sm text-zinc-300">Regras do jogo</p>
+    <ul class="mt-3 space-y-2">
+      <% @rules.each do |r| %>
+        <li class="rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm text-zinc-200">✅ <%= r %></li>
+      <% end %>
+    </ul>
+  </div>
+
+
 </div>

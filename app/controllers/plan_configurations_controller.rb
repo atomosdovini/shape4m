@@ -2,46 +2,81 @@
 class PlanConfigurationsController < ApplicationController
   def edit
     @config = PlanConfiguration.current(current_user)
+    # Verifica se é um novo usuário (criado há menos de 5 minutos)
+    @is_new_user = current_user.created_at > 5.minutes.ago
   end
   
   def update
     @config = PlanConfiguration.current(current_user)
+    @is_new_user = current_user.created_at > 5.minutes.ago
     
-    # Converter params para hash aninhado
-    data = {
-      'title' => params[:title],
-      'profile' => {
-        'height_cm' => params[:height_cm]&.to_i,
-        'start_weight_kg' => params[:start_weight_kg]&.to_f,
-        'duration_weeks' => params[:duration_weeks]&.to_i
-      },
-      'targets' => {
-        'calories' => params[:calories]&.to_i,
-        'protein_g' => params[:protein_g]&.to_i,
-        'fat_g' => params[:fat_g]&.to_i,
-        'carbs_g' => params[:carbs_g]&.to_i,
-        'steps' => params[:steps]&.to_i,
-        'water_l' => params[:water_l],
-        'sleep_h' => params[:sleep_h]
-      },
-      'goals' => {
-        'weight_target' => params[:weight_target],
-        'loss_12w' => params[:loss_12w],
-        'loss_16w' => params[:loss_16w]
-      },
-      'rules' => params[:rules]&.reject(&:blank?) || [],
-      'meals' => parse_meals(params),
-      'foods' => parse_foods(params),
-      'workouts' => parse_workouts(params),
-      'week_template' => params[:week_template]&.reject(&:blank?) || [],
-      'daily_routine_template' => parse_daily_routine(params),
-      'steps_blocks' => parse_steps_blocks(params)
-    }
+    # Verifica se é uma atualização parcial via JSON
+    update_type = params[:update_type]
     
-    if @config.update(data: data)
-      redirect_to profile_path, notice: "Perfil atualizado com sucesso!"
+    if update_type.present? && (update_type == "meals_foods" || update_type == "workouts")
+      # Atualização parcial via JSON
+      begin
+        # Faz uma cópia profunda do hash usando Marshal
+        current_data = @config.data ? Marshal.load(Marshal.dump(@config.data)) : {}
+        
+        case update_type
+        when "meals_foods"
+          partial_data = JSON.parse(params[:meals_foods_json])
+          merged_data = current_data.merge(partial_data)
+          message = "Refeições e alimentos atualizados com sucesso!"
+        when "workouts"
+          partial_data = JSON.parse(params[:workouts_json])
+          merged_data = current_data.merge(partial_data)
+          message = "Treinos atualizados com sucesso!"
+        end
+        
+        if @config.update(data: merged_data)
+          redirect_to profile_path, notice: message
+        else
+          flash[:alert] = "Erro ao salvar: #{@config.errors.full_messages.join(', ')}"
+          render :edit, status: :unprocessable_entity
+        end
+      rescue JSON::ParserError => e
+        flash[:alert] = "JSON inválido: #{e.message}"
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      # Atualização completa via formulário normal
+      data = {
+        'title' => params[:title],
+        'profile' => {
+          'height_cm' => params[:height_cm]&.to_i,
+          'start_weight_kg' => params[:start_weight_kg]&.to_f,
+          'duration_weeks' => params[:duration_weeks]&.to_i
+        },
+        'targets' => {
+          'calories' => params[:calories]&.to_i,
+          'protein_g' => params[:protein_g]&.to_i,
+          'fat_g' => params[:fat_g]&.to_i,
+          'carbs_g' => params[:carbs_g]&.to_i,
+          'steps' => params[:steps]&.to_i,
+          'water_l' => params[:water_l],
+          'sleep_h' => params[:sleep_h]
+        },
+        'goals' => {
+          'weight_target' => params[:weight_target],
+          'loss_12w' => params[:loss_12w],
+          'loss_16w' => params[:loss_16w]
+        },
+        'rules' => params[:rules]&.reject(&:blank?) || [],
+        'meals' => parse_meals(params),
+        'foods' => parse_foods(params),
+        'workouts' => parse_workouts(params),
+        'week_template' => params[:week_template]&.reject(&:blank?) || [],
+        'daily_routine_template' => parse_daily_routine(params),
+        'steps_blocks' => parse_steps_blocks(params)
+      }
+      
+      if @config.update(data: data)
+        redirect_to profile_path, notice: "Perfil atualizado com sucesso!"
+      else
+        render :edit, status: :unprocessable_entity
+      end
     end
   end
   

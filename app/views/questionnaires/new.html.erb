@@ -1,0 +1,61 @@
+<div class="space-y-6">
+  <div class="text-center mb-6">
+    <h2 class="text-2xl font-semibold mb-2">Vamos criar seu plano personalizado!</h2>
+    <p class="text-sm text-zinc-400">Responda 5 perguntas rápidas para começarmos</p>
+  </div>
+
+  <%= form_with model: @user, url: questionnaire_path, method: :post, class: "space-y-6" do |f| %>
+    
+    <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+      <h3 class="text-lg font-semibold mb-4">Informações Básicas</h3>
+      
+      <div class="space-y-4">
+        <div>
+          <%= f.label :height_cm, "1. Qual sua altura? (cm)", class: "block text-sm text-zinc-300 mb-2" %>
+          <%= f.number_field :height_cm, min: 100, max: 250, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20", placeholder: "Ex: 175" %>
+        </div>
+        
+        <div>
+          <%= f.label :start_weight_kg, "2. Qual seu peso atual? (kg)", class: "block text-sm text-zinc-300 mb-2" %>
+          <%= f.number_field :start_weight_kg, step: 0.1, min: 30, max: 200, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20", placeholder: "Ex: 75.5" %>
+        </div>
+        
+        <div>
+          <%= f.label :objective, "3. Qual seu objetivo principal?", class: "block text-sm text-zinc-300 mb-2" %>
+          <%= f.select :objective, 
+              options_for_select([
+                ["Emagrecer", "emagrecer"],
+                ["Definir / Tonificar", "definir"],
+                ["Ganhar Massa", "ganhar_massa"]
+              ]), 
+              { prompt: "Selecione seu objetivo" },
+              { class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" } %>
+        </div>
+        
+        <div>
+          <%= f.label :training_days_per_week, "4. Quantos dias por semana você pode/quer treinar?", class: "block text-sm text-zinc-300 mb-2" %>
+          <%= f.select :training_days_per_week,
+              options_for_select([
+                ["3 dias", 3],
+                ["4 dias", 4],
+                ["5 dias", 5],
+                ["6 dias", 6]
+              ]),
+              { prompt: "Selecione quantos dias" },
+              { class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" } %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-4 py-3">
+      <p class="text-sm text-emerald-200">
+        <strong>✨ Próximo passo:</strong> Com essas informações, vamos gerar um plano totalmente personalizado para você usando IA. Isso pode levar alguns minutos.
+      </p>
+    </div>
+    
+    <div class="pb-6">
+      <%= f.submit "Gerar Meu Plano Personalizado", class: "w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold px-4 py-3 shadow-lg shadow-emerald-500/20 transition-all duration-200 border-2 border-emerald-500 hover:border-emerald-400 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 focus:ring-offset-zinc-950", style: "cursor: pointer; display: block; text-align: center;" %>
+    </div>
+  <% end %>
+</div>
+

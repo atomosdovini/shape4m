@@ -106,7 +106,7 @@
   <div class="rounded-2xl border border-white/10 bg-white/5 p-2">
     <div class="divide-y divide-white/10">
       <% @routine_logs.each do |rl| %>
-        <% tmpl = Plan.routine_template_for(@date).find { |x| x[:key] == rl.key } %>
+        <% tmpl = Plan.routine_template_for(@date, current_user).find { |x| x[:key] == rl.key } %>
         <% title  = tmpl ? tmpl[:title] : rl.key %>
         <% detail = tmpl ? tmpl[:detail] : "" %>
         <% time   = tmpl ? tmpl[:time] : "" %>

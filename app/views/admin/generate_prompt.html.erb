@@ -1,0 +1,24 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-semibold">Prompt para ChatGPT</h2>
+    <%= link_to "← Voltar", admin_user_path(@user), class: "text-sm text-zinc-400 hover:text-zinc-200" %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-lg font-semibold">Prompt Personalizado</h3>
+      <button onclick="navigator.clipboard.writeText(`<%= j(@prompt) %>`)" class="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 text-sm">
+        Copiar Prompt
+      </button>
+    </div>
+    
+    <div class="rounded-xl border border-blue-400/20 bg-blue-500/10 p-4">
+      <pre class="text-xs text-blue-200 whitespace-pre-wrap overflow-x-auto"><%= @prompt %></pre>
+    </div>
+    
+    <p class="text-sm text-zinc-400 mt-4">
+      <strong>Instruções:</strong> Copie o prompt acima, cole no ChatGPT, e peça para gerar o JSON completo seguindo a estrutura do arquivo PROMPT_PLANO_PERSONALIZADO.md. Depois, copie o JSON gerado e cole na página anterior.
+    </p>
+  </div>
+</div>
+

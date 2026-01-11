@@ -1,0 +1,51 @@
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-semibold">Admin - Planos Personalizados</h2>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Usuários Aguardando Plano Personalizado</h3>
+    
+    <% if @users_pending.any? %>
+      <div class="space-y-2">
+        <% @users_pending.each do |user| %>
+          <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 flex items-center justify-between">
+            <div>
+              <p class="font-semibold"><%= user.email %></p>
+              <p class="text-sm text-zinc-400">
+                Altura: <%= user.height_cm %>cm • Peso: <%= user.start_weight_kg %>kg • 
+                Objetivo: <%= user.objective %> • Treinos: <%= user.training_days_per_week %>/semana
+              </p>
+            </div>
+            <%= link_to "Gerar Plano", admin_user_path(user), class: "rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-2 text-sm" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-sm text-zinc-400">Nenhum usuário aguardando plano personalizado.</p>
+    <% end %>
+  </div>
+
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Usuários com Plano Personalizado</h3>
+    
+    <% if @users_customized.any? %>
+      <div class="space-y-2">
+        <% @users_customized.each do |user| %>
+          <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 flex items-center justify-between">
+            <div>
+              <p class="font-semibold"><%= user.email %></p>
+              <p class="text-sm text-zinc-400">
+                Plano personalizado ativo
+              </p>
+            </div>
+            <%= link_to "Ver/Editar", admin_user_path(user), class: "rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold px-4 py-2 text-sm" %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-sm text-zinc-400">Nenhum usuário com plano personalizado ainda.</p>
+    <% end %>
+  </div>
+</div>
+
