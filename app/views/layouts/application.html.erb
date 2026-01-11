@@ -22,15 +22,32 @@
           </div>
           <div class="text-right">
             <p class="text-xs text-zinc-400"><%= Date.current.strftime("%d/%m/%Y") %></p>
+            <% if user_signed_in? %>
+              <div class="flex items-center gap-2 mt-1">
+                <%= link_to profile_path, class: "text-xs text-zinc-400 hover:text-zinc-200" do %>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
+                <% end %>
+                <%= link_to "Sair", destroy_user_session_path, data: { turbo_method: :delete }, class: "text-xs text-zinc-400 hover:text-zinc-200" %>
+              </div>
+            <% else %>
+              <%= link_to "Entrar", new_user_session_path, class: "text-xs text-zinc-400 hover:text-zinc-200" %>
+            <% end %>
           </div>
         </div>
       </header>
 
       <!-- Flash -->
-      <div class="px-4 pt-3">
+      <div class="px-4 pt-3 space-y-2">
         <% if notice.present? %>
           <div class="rounded-xl border border-emerald-400/20 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-200">
             <%= notice %>
+          </div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="rounded-xl border border-red-400/20 bg-red-500/10 px-3 py-2 text-sm text-red-200">
+            <%= alert %>
           </div>
         <% end %>
       </div>
@@ -41,16 +58,30 @@
       </main>
 
       <!-- Bottom nav -->
-      <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur border-t border-white/10">
-        <div class="mx-auto max-w-md px-3 py-2 grid grid-cols-4 gap-2 text-xs">
-          <%= link_to "Home", root_path,
-              class: "rounded-xl px-3 py-2 text-center #{current_page?(root_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
-          <%= link_to "Hoje", today_path,
-              class: "rounded-xl px-3 py-2 text-center #{current_page?(today_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
-          <%= link_to "Treino", workout_path,
-              class: "rounded-xl px-3 py-2 text-center #{current_page?(workout_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
-          <%= link_to "Plano", plan_path,
-              class: "rounded-xl px-3 py-2 text-center #{current_page?(plan_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" %>
+      <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur border-t border-white/10 z-50">
+        <div class="mx-auto max-w-md">
+          <div class="flex items-center justify-around px-2 py-2 text-xs">
+            <%= link_to root_path,
+                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(root_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+              Home
+            <% end %>
+            <%= link_to today_path,
+                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(today_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+              Hoje
+            <% end %>
+            <%= link_to workout_path,
+                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(workout_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+              Treino
+            <% end %>
+            <%= link_to plan_path,
+                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(plan_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+              Plano
+            <% end %>
+            <%= link_to profile_path,
+                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(profile_path) || current_page?(edit_plan_configuration_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+              Perfil
+            <% end %>
+          </div>
         </div>
       </nav>
     </div>

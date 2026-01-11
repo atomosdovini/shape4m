@@ -1,0 +1,255 @@
+<div class="space-y-4 mb-4">
+  <div class="flex items-center justify-between">
+    <h2 class="text-2xl font-semibold">Meu Perfil</h2>
+    <%= link_to "Ver Plano", plan_path, class: "text-sm text-zinc-400 hover:text-zinc-200" %>
+  </div>
+  <p class="text-sm text-zinc-400">Edite suas informações pessoais e configurações do plano</p>
+</div>
+
+<%= form_with url: plan_configuration_path, method: :patch, class: "space-y-6" do |f| %>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Configuração do Plano</h3>
+    
+    <div class="space-y-3">
+      <div>
+        <%= label_tag :title, "Título do Plano", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :title, @config.title, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Perfil</h3>
+    <div class="space-y-3">
+      <div>
+        <%= label_tag :height_cm, "Altura (cm)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :height_cm, @config.profile['height_cm'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :start_weight_kg, "Peso Inicial (kg)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :start_weight_kg, @config.profile['start_weight_kg'], step: 0.1, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :duration_weeks, "Duração (semanas)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :duration_weeks, @config.profile['duration_weeks'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Metas Diárias</h3>
+    <div class="space-y-3">
+      <div>
+        <%= label_tag :calories, "Calorias", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :calories, @config.targets['calories'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :protein_g, "Proteína (g)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :protein_g, @config.targets['protein_g'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :fat_g, "Gordura (g)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :fat_g, @config.targets['fat_g'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :carbs_g, "Carboidratos (g)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :carbs_g, @config.targets['carbs_g'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :steps, "Passos", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= number_field_tag :steps, @config.targets['steps'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :water_l, "Água (L)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :water_l, @config.targets['water_l'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :sleep_h, "Sono (horas)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :sleep_h, @config.targets['sleep_h'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Objetivos</h3>
+    <div class="space-y-3">
+      <div>
+        <%= label_tag :weight_target, "Peso Alvo", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :weight_target, @config.goals['weight_target'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :loss_12w, "Perda 12 semanas", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :loss_12w, @config.goals['loss_12w'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :loss_16w, "Perda 16 semanas", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_field_tag :loss_16w, @config.goals['loss_16w'], class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Regras</h3>
+    <div class="space-y-2">
+      <% @config.rules.each_with_index do |rule, i| %>
+        <%= text_field_tag "rules[]", rule, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20", placeholder: "Regra #{i+1}" %>
+      <% end %>
+      <% 5.times do |i| %>
+        <%= text_field_tag "rules[]", "", class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20", placeholder: "Nova regra" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Refeições</h3>
+    <div class="space-y-4">
+      <% @config.meals.each_with_index do |meal, i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "meal_#{i}_name", meal['name'], placeholder: "Nome da refeição", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% meal['options'].each_with_index do |option, j| %>
+            <%= text_field_tag "meal_#{i}_options[]", option, placeholder: "Opção #{j+1}", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% end %>
+          <% 3.times do |j| %>
+            <%= text_field_tag "meal_#{i}_options[]", "", placeholder: "Nova opção", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% end %>
+        </div>
+      <% end %>
+      <% 2.times do |i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "meal_#{@config.meals.length + i}_name", "", placeholder: "Nome da refeição", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% 3.times do |j| %>
+            <%= text_field_tag "meal_#{@config.meals.length + i}_options[]", "", placeholder: "Opção #{j+1}", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Alimentos</h3>
+    <div class="space-y-3">
+      <div>
+        <%= label_tag :foods_proteins, "Proteínas (um por linha)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_area_tag :foods_proteins, @config.foods['proteins']&.join("\n"), rows: 5, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :foods_carbs, "Carboidratos (um por linha)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_area_tag :foods_carbs, @config.foods['carbs']&.join("\n"), rows: 5, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :foods_fats, "Gorduras (um por linha)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_area_tag :foods_fats, @config.foods['fats']&.join("\n"), rows: 5, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+      
+      <div>
+        <%= label_tag :foods_fibers, "Fibras (um por linha)", class: "block text-sm text-zinc-300 mb-1" %>
+        <%= text_area_tag :foods_fibers, @config.foods['fibers']&.join("\n"), rows: 5, class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      </div>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Treinos</h3>
+    <div class="space-y-4">
+      <% @config.workouts.each_with_index do |(name, exercises), i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "workout_#{i}_name", name, placeholder: "Nome do treino", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% exercises.each_with_index do |(ex_name, ex_sets), j| %>
+            <div class="grid grid-cols-2 gap-2">
+              <%= text_field_tag "workout_#{i}_exercise_#{j}_name", ex_name, placeholder: "Exercício", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+              <%= text_field_tag "workout_#{i}_exercise_#{j}_sets", ex_sets, placeholder: "Séries", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+            </div>
+          <% end %>
+          <% 3.times do |j| %>
+            <div class="grid grid-cols-2 gap-2">
+              <%= text_field_tag "workout_#{i}_exercise_#{exercises.length + j}_name", "", placeholder: "Exercício", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+              <%= text_field_tag "workout_#{i}_exercise_#{exercises.length + j}_sets", "", placeholder: "Séries", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <% 2.times do |i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "workout_#{@config.workouts.length + i}_name", "", placeholder: "Nome do treino", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <% 3.times do |j| %>
+            <div class="grid grid-cols-2 gap-2">
+              <%= text_field_tag "workout_#{@config.workouts.length + i}_exercise_#{j}_name", "", placeholder: "Exercício", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+              <%= text_field_tag "workout_#{@config.workouts.length + i}_exercise_#{j}_sets", "", placeholder: "Séries", class: "rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Template Semanal</h3>
+    <div class="space-y-2">
+      <% @config.week_template.each_with_index do |day, i| %>
+        <%= text_field_tag "week_template[]", day, placeholder: "Dia #{i+1}", class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      <% end %>
+      <% 2.times do |i| %>
+        <%= text_field_tag "week_template[]", "", placeholder: "Dia #{@config.week_template.length + i + 1}", class: "w-full rounded-xl border border-white/10 bg-zinc-950/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Rotina Diária</h3>
+    <div class="space-y-2">
+      <% @config.daily_routine_template.each_with_index do |routine, i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "routine_#{i}_time", routine['time'], placeholder: "Horário (HH:MM)", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "routine_#{i}_title", routine['title'], placeholder: "Título", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "routine_#{i}_detail", routine['detail'], placeholder: "Detalhes", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+        </div>
+      <% end %>
+      <% 3.times do |i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "routine_#{@config.daily_routine_template.length + i}_time", "", placeholder: "Horário (HH:MM)", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "routine_#{@config.daily_routine_template.length + i}_title", "", placeholder: "Título", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "routine_#{@config.daily_routine_template.length + i}_detail", "", placeholder: "Detalhes", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+    <h3 class="text-lg font-semibold mb-4">Blocos de Passos</h3>
+    <div class="space-y-2">
+      <% @config.steps_blocks.each_with_index do |block, i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "steps_#{i}_time", block['time'], placeholder: "Horário (HH:MM)", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= number_field_tag "steps_#{i}_steps", block['steps'], placeholder: "Passos", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "steps_#{i}_label", block['label'], placeholder: "Label", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+        </div>
+      <% end %>
+      <% 2.times do |i| %>
+        <div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3 space-y-2">
+          <%= text_field_tag "steps_#{@config.steps_blocks.length + i}_time", "", placeholder: "Horário (HH:MM)", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= number_field_tag "steps_#{@config.steps_blocks.length + i}_steps", "", placeholder: "Passos", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+          <%= text_field_tag "steps_#{@config.steps_blocks.length + i}_label", "", placeholder: "Label", class: "w-full rounded-xl border border-white/10 bg-zinc-900/40 px-3 py-2 text-sm focus:outline-none focus:border-white/20" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="pb-6 space-y-3">
+    <%= submit_tag "Salvar Perfil", class: "w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-4 py-3" %>
+    <%= link_to "Cancelar", plan_path, class: "block w-full text-center rounded-xl border border-white/10 bg-zinc-950/40 hover:bg-zinc-900/40 text-white font-semibold px-4 py-3" %>
+  </div>
+<% end %>
+

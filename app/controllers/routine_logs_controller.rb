@@ -1,6 +1,6 @@
 class RoutineLogsController < ApplicationController
   def toggle
-    log = RoutineLog.find(params[:id])
+    log = current_user.routine_logs.find(params[:id])
 
     log.done = !log.done
     log.done_at = log.done ? Time.current : nil

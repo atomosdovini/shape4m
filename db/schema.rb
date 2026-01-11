@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_01_10_215102) do
+ActiveRecord::Schema[7.1].define(version: 2026_01_11_024328) do
   create_table "daily_logs", force: :cascade do |t|
     t.date "date"
     t.decimal "weight_kg"
@@ -24,6 +24,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_10_215102) do
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_daily_logs_on_user_id"
+  end
+
+  create_table "plan_configurations", force: :cascade do |t|
+    t.json "data", default: {}
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_plan_configurations_on_user_id"
   end
 
   create_table "routine_logs", force: :cascade do |t|
@@ -34,6 +44,23 @@ ActiveRecord::Schema[7.1].define(version: 2026_01_10_215102) do
     t.integer "position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_routine_logs_on_user_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  add_foreign_key "daily_logs", "users"
+  add_foreign_key "plan_configurations", "users"
+  add_foreign_key "routine_logs", "users"
 end

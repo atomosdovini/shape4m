@@ -1,5 +1,8 @@
 class DailyLog < ApplicationRecord
-  validates :date, presence: true, uniqueness: true
+  belongs_to :user
+  
+  validates :date, presence: true
+  validates :date, uniqueness: { scope: :user_id }
 
   def completed_score
     [

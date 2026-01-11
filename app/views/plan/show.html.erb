@@ -1,4 +1,9 @@
 <div class="space-y-4">
+  <div class="flex items-center justify-between mb-2">
+    <h2 class="text-xl font-semibold">Plano</h2>
+    <%= link_to "Editar", edit_plan_configuration_path, class: "rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2" %>
+  </div>
+  
   <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
     <p class="text-sm text-zinc-300"><%= @title %></p>
     <p class="text-lg font-semibold mt-1">Metas diárias</p>
