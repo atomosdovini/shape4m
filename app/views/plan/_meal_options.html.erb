@@ -1,0 +1,30 @@
+<div class="rounded-xl border border-white/10 bg-zinc-950/40 p-3">
+  <p class="font-semibold mb-4"><%= meal[:name] %></p>
+  
+  <!-- Tabs para opções -->
+  <div class="meal-tabs-wrapper">
+    <% meal[:options].each_with_index do |opt, opt_index| %>
+      <button 
+        type="button"
+        onclick="switchMealTab(<%= meal_index %>, <%= opt_index %>); return false;"
+        id="meal-tab-<%= meal_index %>-<%= opt_index %>"
+        class="meal-option-tab <%= opt_index == 0 ? 'active' : '' %>"
+      >
+        Opção <%= opt_index + 1 %>
+      </button>
+    <% end %>
+  </div>
+  
+  <!-- Conteúdo das opções -->
+  <div class="meal-options-container">
+    <% meal[:options].each_with_index do |opt, opt_index| %>
+      <div 
+        id="meal-content-<%= meal_index %>-<%= opt_index %>"
+        class="meal-option-content <%= opt_index == 0 ? 'active' : '' %>"
+      >
+        <p class="text-sm text-zinc-300 leading-relaxed"><%= opt %></p>
+      </div>
+    <% end %>
+  </div>
+</div>
+

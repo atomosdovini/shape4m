@@ -1,8 +1,22 @@
 # app/models/plan.rb
 class Plan
   def self.config(user)
+    # Sempre busca do banco para garantir dados atualizados
+    # Busca diretamente do banco sem cache
+    config = PlanConfiguration.current(user)
+    # Recarrega apenas se o registro já foi salvo
+    config.persisted? ? config.reload : config
+  end
+  
+  # Limpa o cache para um usuário específico
+  def self.clear_cache_for_user(user_id)
     @config ||= {}
-    @config[user.id] ||= PlanConfiguration.current(user)
+    @config.delete(user_id)
+  end
+  
+  # Limpa todo o cache
+  def self.clear_cache
+    @config = {}
   end
   
   def self.current_user=(user)

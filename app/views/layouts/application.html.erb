@@ -1,14 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Shape4m</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Shape4M - Plano de Treino</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="description" content="Seu plano personalizado de treino e alimentação">
+    <meta name="theme-color" content="#10b981">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Shape4M">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/service-worker.js')
+            .then(registration => {
+              console.log('Service Worker registrado:', registration);
+            })
+            .catch(error => {
+              console.log('Erro ao registrar Service Worker:', error);
+            });
+        });
+      }
+    </script>
   </head>
 
   <body class="bg-zinc-950 text-zinc-50">
@@ -17,8 +41,24 @@
       <header class="sticky top-0 z-10 bg-zinc-950/80 backdrop-blur border-b border-white/10">
         <div class="px-4 py-3 flex items-center justify-between">
           <div>
-            <p class="text-sm text-zinc-300">Projeto</p>
-            <h1 class="text-lg font-semibold">Saúde em dia</h1>
+            <% 
+              hora = Time.current.hour
+              saudacao = if hora >= 6 && hora < 12
+                "Bom dia"
+              elsif hora >= 12 && hora < 18
+                "Boa tarde"
+              else
+                "Boa noite"
+              end
+            %>
+            <p class="text-sm text-zinc-300"><%= saudacao %></p>
+            <h1 class="text-lg font-semibold">
+              <% if user_signed_in? %>
+                <%= current_user.email %>
+              <% else %>
+                Entre
+              <% end %>
+            </h1>
           </div>
           <div class="text-right">
             <p class="text-xs text-zinc-400"><%= Date.current.strftime("%d/%m/%Y") %></p>
@@ -66,25 +106,25 @@
       <!-- Bottom nav -->
       <nav class="fixed bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur border-t border-white/10 z-50">
         <div class="mx-auto max-w-md">
-          <div class="flex items-center justify-around px-2 py-2 text-xs">
+          <div class="flex items-center justify-around px-2 py-4 text-xs">
             <%= link_to root_path,
-                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(root_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+                class: "flex-1 rounded-xl px-2 py-3 text-center whitespace-nowrap #{current_page?(root_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
               Home
             <% end %>
             <%= link_to today_path,
-                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(today_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+                class: "flex-1 rounded-xl px-2 py-3 text-center whitespace-nowrap #{current_page?(today_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
               Hoje
             <% end %>
             <%= link_to workout_path,
-                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(workout_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+                class: "flex-1 rounded-xl px-2 py-3 text-center whitespace-nowrap #{current_page?(workout_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
               Treino
             <% end %>
             <%= link_to plan_path,
-                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(plan_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+                class: "flex-1 rounded-xl px-2 py-3 text-center whitespace-nowrap #{current_page?(plan_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
               Dieta
             <% end %>
             <%= link_to profile_path,
-                class: "flex-1 rounded-xl px-2 py-2 text-center whitespace-nowrap #{current_page?(profile_path) || current_page?(edit_plan_configuration_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
+                class: "flex-1 rounded-xl px-2 py-3 text-center whitespace-nowrap #{current_page?(profile_path) || current_page?(edit_plan_configuration_path) ? 'bg-white/10 text-white' : 'text-zinc-300'}" do %>
               Perfil
             <% end %>
           </div>

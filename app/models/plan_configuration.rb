@@ -2,6 +2,10 @@
 class PlanConfiguration < ApplicationRecord
   belongs_to :user
   
+  # Limpa o cache do Plan quando a configuração é atualizada
+  after_save :clear_plan_cache
+  after_update :clear_plan_cache
+  
   # Retorna a configuração atual do usuário (sempre uma)
   def self.current(user)
     user.plan_configuration || user.create_plan_configuration!(data: default_data, is_customized: false)
@@ -12,7 +16,7 @@ class PlanConfiguration < ApplicationRecord
     is_customized == true
   end
   
-  # Acessa dados como hash
+  # Acessa dados como hash (métodos públicos)
   def title
     data['title']
   end
@@ -58,6 +62,10 @@ class PlanConfiguration < ApplicationRecord
   end
   
   private
+  
+  def clear_plan_cache
+    Plan.clear_cache_for_user(user_id)
+  end
   
   def self.default_data
     {
